@@ -17,5 +17,5 @@
   ],
   "dependencies": {
     "es5-shim": "2.0.0"
-  },
+  }
 }
