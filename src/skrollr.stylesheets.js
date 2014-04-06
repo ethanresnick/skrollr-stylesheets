@@ -129,6 +129,9 @@ define(function() {
 			//Apply the keyframes to the elements.
 			applyKeyframes(matchingStylesheetsKey);
 			skrollr.refresh();
+
+			//update lastMatchingStylesheetsKey
+			lastMatchingStylesheetsKey = matchingStylesheetsKey;
 		}
 	};
 
