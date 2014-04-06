@@ -195,7 +195,7 @@ define(function() {
 		var lastAttr   = 'data-' + ssPrefix + '-' + lastMatchingStylesheetsKey;
 		var elements   = document.querySelectorAll('['+attrName+'], ['+lastAttr+']');
 		var currElement;
-		var styler = function(v) { currElement.style[v] = ''; };
+		var styler = function(v) { skrollr.setStyle(currElement, v, ''); }; //use skrollr's built in function to handle prefixes etc.
 		var easingStripper = function(propertyWithEasing) { return propertyWithEasing.replace(/\[.*\]/, ''); };
 
 		for(var i=0, len = elements.length; i < len; i++) {
