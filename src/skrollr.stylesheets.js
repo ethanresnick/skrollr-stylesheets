@@ -5,14 +5,13 @@
  * Is an AMD module; returns an object that can be called with the
  * skrollr instance when the dom is loaded.
  */
-define(function() {
+define(['skrollr'], function(skrollr) {
 	'use strict';
 
 	var sheets = [];
 	var lastCall;
 	var resizeThrottle = 30;
 	var resizeDefer;
-	var skrollr;
 	var lastMatchingStylesheetsKey = '';
 	var processedMatchingStylesheetsKeys = {};
 	var ssPrefix = 'ss';
@@ -54,10 +53,7 @@ define(function() {
 	};
 
 	//"main"
-	var kickstart = function(sheetElms, skrollrInstance) {
-		//make the provided skrollr instance accessible to other functions
-		skrollr = skrollrInstance;
-
+	var kickstart = function(sheetElms) {
 		//Iterate over all stylesheets, embedded and remote.
 		for(var i = 0, len = sheetElms.length; i < len; i++) {
 			var sheetElm = sheetElms[i];
@@ -128,7 +124,7 @@ define(function() {
 
 			//Apply the keyframes to the elements.
 			applyKeyframes(matchingStylesheetsKey);
-			skrollr.refresh();
+			(skrollr.get() || skrollr.init()).refresh();
 
 			//update lastMatchingStylesheetsKey
 			lastMatchingStylesheetsKey = matchingStylesheetsKey;
@@ -353,9 +349,9 @@ define(function() {
 	}
 
 	return {
-		'init': function(skrollr) {
+		'init': function() {
 			//start her up
-			kickstart(document.querySelectorAll('link, style'), skrollr);
+			kickstart(document.querySelectorAll('link, style'));
 
 			if(window.addEventListener) {
 				window.addEventListener('resize', resizeHandler, false);
@@ -366,5 +362,4 @@ define(function() {
 			}
 		}
 	};
-
 });

@@ -110,15 +110,16 @@
 		require.config({
 			paths: {
 				"skrollr-stylesheets": "../src/skrollr.stylesheets"
+			},
+			shims: {
+				'skrollr': {exports: 'skrollr'}
 			}
 		});
 
 		$(function() {
 			require(["skrollr-stylesheets"], function(s) {
-				var skrollrMock = {'refresh': function() {}};
-				s.init(skrollrMock);
+				s.init();
 				QUnit.start();
-				
 			});
 		});
 	</script>
