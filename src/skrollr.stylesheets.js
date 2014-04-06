@@ -191,15 +191,26 @@ define(function() {
 
 	//Applies the keyframes (as data-attributes) to the elements.
 	var applyKeyframes = function(matchingStylesheetsKey) {
-		var attrName = 'data-'+ ssPrefix + '-'+ matchingStylesheetsKey;
-		var elements = document.querySelectorAll('['+attrName+']');
-		var keyframeData;
+		var attrName   = 'data-'+ ssPrefix + '-'+ matchingStylesheetsKey;
+		var lastAttr   = 'data-' + ssPrefix + '-' + lastMatchingStylesheetsKey;
+		var elements   = document.querySelectorAll('['+attrName+'], ['+lastAttr+']');
+		var currElement;
+		var styler = function(v) { currElement.style[v] = ''; };
+		var easingStripper = function(propertyWithEasing) { return propertyWithEasing.replace(/\[.*\]/, ''); };
 
 		for(var i=0, len = elements.length; i < len; i++) {
-			keyframeData = JSON.parse(elements[i].getAttribute(attrName)) || {};
+			currElement  = elements[i];
 
+			//create the new data attrs
+			var keyframeData = JSON.parse(currElement.getAttribute(attrName)) || {};
 			for(var keyframeName in keyframeData) {
-				elements[i].setAttribute('data-' + keyframeName, keyframeData[keyframeName]);
+				currElement.setAttribute('data-' + keyframeName, keyframeData[keyframeName]);
+			}
+
+			//remove old style settings (from the lastMatchingStylesheetKey's keyframes) in the style attribute
+			var theseKeyframes = JSON.parse(currElement.getAttribute(lastAttr)) || {};
+			for(var thisKeyframe in theseKeyframes) {
+				propertiesFinder(theseKeyframes[thisKeyframe]).map(easingStripper).forEach(styler);
 			}
 		}
 	};
@@ -321,6 +332,19 @@ define(function() {
 			count >>= 1, pattern += pattern;
 		}
 		return result;
+	}
+
+	//returns an array of properties from a string of inline css
+	function propertiesFinder(cssString) {
+		cssString = cssString.trim();
+		var propValStrings = (cssString.charAt(cssString.length-1) == ';' ? cssString.substring(0, cssString.length - 1) : cssString).split(';');
+		var properties = [];
+
+		for(var i = 0, len = propValStrings.length; i < len; i++) {
+			properties.push(propValStrings[i].split(':')[0]);
+		}
+
+		return properties;
 	}
 
 	//adjust on resize
