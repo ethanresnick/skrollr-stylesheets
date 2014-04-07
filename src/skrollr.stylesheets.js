@@ -15,6 +15,7 @@ define(['skrollr'], function(skrollr) {
 	var lastMatchingStylesheetsKey = '';
 	var processedMatchingStylesheetsKeys = {};
 	var ssPrefix = 'ss';
+	var skrollrInst;
 
 	//Finds the declaration of an animation block.
 	var rxAnimation = /@-skrollr-keyframes\s+([\w-]+)/g;
@@ -53,7 +54,9 @@ define(['skrollr'], function(skrollr) {
 	};
 
 	//"main"
-	var kickstart = function(sheetElms) {
+	var kickstart = function(sheetElms, instance) {
+		skrollrInst = instance;
+
 		//Iterate over all stylesheets, embedded and remote.
 		for(var i = 0, len = sheetElms.length; i < len; i++) {
 			var sheetElm = sheetElms[i];
@@ -124,7 +127,7 @@ define(['skrollr'], function(skrollr) {
 
 			//Apply the keyframes to the elements.
 			applyKeyframes(matchingStylesheetsKey);
-			(skrollr.get() || skrollr.init()).refresh();
+			skrollrInst.refresh();
 
 			//update lastMatchingStylesheetsKey
 			lastMatchingStylesheetsKey = matchingStylesheetsKey;
@@ -349,9 +352,9 @@ define(['skrollr'], function(skrollr) {
 	}
 
 	return {
-		'init': function() {
+		'init': function(skrollrInst) {
 			//start her up
-			kickstart(document.querySelectorAll('link, style'));
+			kickstart(document.querySelectorAll('link, style'), skrollrInst || skrollr.get() || skrollr.init());
 
 			if(window.addEventListener) {
 				window.addEventListener('resize', resizeHandler, false);
