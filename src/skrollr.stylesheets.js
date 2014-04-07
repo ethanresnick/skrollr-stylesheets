@@ -363,6 +363,16 @@ define(['skrollr'], function(skrollr) {
 			else if(window.attachEvent) {
 				window.attachEvent('onresize', resizeHandler);
 			}
+		},
+
+		//call if you've changed the keyframes object in the dom for a given stylesheetsKey
+		'registerKeyframeChange': function() {
+			var matchingStylesheetsKey = getMatchingStylesheetsKey(sheets);
+
+			if(matchingStylesheetsKey === lastMatchingStylesheetsKey) {
+				applyKeyframes(matchingStylesheetsKey);
+				skrollrInst.refresh();
+			}
 		}
 	};
 });
