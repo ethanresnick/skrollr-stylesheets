@@ -62,11 +62,11 @@ define(['skrollr'], function(skrollr) {
 			var sheetElm = sheetElms[i];
 			var content;
 
-			if(sheetElm.tagName === 'LINK') {
-				if(sheetElm.getAttribute('data-skrollr-stylesheet') === null) {
-					continue;
-				}
+			if(sheetElm.getAttribute('data-skrollr-stylesheet') === null) {
+				continue;
+			}
 
+			if(sheetElm.tagName === 'LINK') {
 				//Remote stylesheet, fetch it (synchrnonous).
 				content = fetchRemote(sheetElm.href);
 			} else {
